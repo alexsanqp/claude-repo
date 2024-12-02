@@ -10,9 +10,19 @@ app.get('/', (req, res) => {
 });
 
 // Налаштування порту
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3002;
 
-// Запуск сервера
-app.listen(PORT, () => {
+// Запуск сервера з обробкою помилок
+const server = app.listen(PORT, () => {
   console.log(`Сервер запущено на порті ${PORT}`);
+});
+
+server.on('error', (error) => {
+  if (error.code === 'EADDRINUSE') {
+    console.log(`Порт ${PORT} вже використовується`);
+    process.exit(1);
+  } else {
+    console.error('Виникла помилка:', error);
+    process.exit(1);
+  }
 });
